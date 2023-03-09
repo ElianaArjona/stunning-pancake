@@ -13,6 +13,7 @@ type BancoGeneralTxt struct {
 }
 
 type BgEntry struct {
+	Name            string  `json:"name,omitempty"`
 	TransactionDate string  `json:"transaction_date,omitempty"`
 	Reference       string  `json:"reference,omitempty"`
 	Description     string  `json:"description,omitempty"`
@@ -23,13 +24,13 @@ type BgEntry struct {
 
 func (bg *BancoGeneralTxt) ParseTxtFile(filePath string) (i interface{}, err error) {
 
-	//Drop header
 	fileLines, reader, err := ReadTxtFileLines(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var entries []*BgEntry
+	//Drop header
 	header := false
 
 	//Parse lines to JSON
@@ -44,6 +45,7 @@ func (bg *BancoGeneralTxt) ParseTxtFile(filePath string) (i interface{}, err err
 				break
 			}
 
+			entry.Name = "Banco General"
 			entry.TransactionDate = data[0]
 			entry.Reference = data[1]
 			entry.Description = data[2]
