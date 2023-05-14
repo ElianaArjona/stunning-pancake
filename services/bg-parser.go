@@ -9,6 +9,8 @@ import (
 	excel "github.com/xuri/excelize/v2"
 )
 
+//identificar las 3 de valor mas alto y con mayor coincidencia
+
 type BankConfig struct {
 	BankName string `json:"bank_name,omitempty"`
 	FileType string `json:"file_type,omitempty"`
@@ -239,6 +241,7 @@ func (r *RawEntry) ProcessRawToEntry(c *BankConfig) (*Entry, error) {
 	e.Income = r.Income
 	e.Expense = r.Expense
 	e.Balance = r.Balance
+	e.Description = r.Description
 
 	if c.FileType == "txt" {
 		var mc = &BgServicesTypesTxt{}
@@ -272,5 +275,9 @@ func (r *RawEntry) ProcessRawToEntry(c *BankConfig) (*Entry, error) {
 	}
 
 	return e, nil
+
+}
+
+func GetTopTransference() {
 
 }

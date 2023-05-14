@@ -37,13 +37,14 @@ type BgServicesTypesExcel struct {
 }
 
 type Entry struct {
-	Bank    string  `json:"bank,omitempty"`
-	Month   int64   `json:"month,omitempty"`
-	Year    int64   `json:"year,omitempty"`
-	Income  float64 `json:"income,omitempty"`
-	Expense float64 `json:"expense,omitempty"`
-	Balance float64 `json:"balance,omitempty"`
-	Type    string  `json:"type,omitempty"`
+	Bank        string  `json:"bank,omitempty"`
+	Month       int64   `json:"month,omitempty"`
+	Year        int64   `json:"year,omitempty"`
+	Income      float64 `json:"income,omitempty"`
+	Expense     float64 `json:"expense,omitempty"`
+	Balance     float64 `json:"balance,omitempty"`
+	Type        string  `json:"type,omitempty"`
+	Description string  `json:"description,omitempty"`
 }
 
 type BgEntries struct {
