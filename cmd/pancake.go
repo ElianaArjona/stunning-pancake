@@ -1,23 +1,32 @@
 package main
 
 import (
-	"pancake/caller"
-	"pancake/services"
+	"log"
+
+	"github.com/elianaarjona/stunning-pancake/caller"
+	"github.com/elianaarjona/stunning-pancake/services"
 )
 
 func main() {
+
+	// verufy why icome is not calculate correctetly and verify the other calculation
 
 	// bg := &services.BgEntries{}
 	// bg.ParseTxtFile("./source/bg-sample.txt")
 	// services.ParseExcelFile("source/bg-excel-sample.xlsx")
 
-	var bg = &services.BankConfig{
+	var bg = &caller.BankConfig{
 		BankName: "Banco General",
-		FilePath: "source/bg-excel-sample.xlsx",
+		FilePath: "samples/sample-new.xlsx",
 		FileType: "excel",
 	}
 
-	caller.ReportBG(bg)
+	reports, err := bg.ReportBG()
+	if err != nil {
+		log.Fatal()
+	}
+
+	services.GetIncomeTops(reports)
 
 	// services.CalculateIncome(bg)
 
