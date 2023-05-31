@@ -23,10 +23,10 @@ const (
 )
 
 var serviceTypes = []string{
-	"Deposit",
-	"ACH",
-	"Tranference",
-	"Yappy",
+	"deposito",
+	"ach",
+	"transferencia",
+	"yappy",
 	"NA",
 }
 
@@ -68,40 +68,58 @@ type BgEntries struct {
 func (r *RawEntry) GetServicesType() {
 	r.Description = strings.ToLower(r.Description)
 
-	switch {
-	case strings.Contains(r.Description, strings.ToLower(serviceTypes[Deposit])):
+	if strings.Contains(r.Description, serviceTypes[Deposit]) && (!strings.Contains(r.Description, serviceTypes[Yappy]) ||
+		!strings.Contains(r.Description, serviceTypes[ACH]) ||
+		!strings.Contains(r.Description, serviceTypes[Tranference])) {
 		r.Type = serviceTypes[Deposit]
-	case strings.Contains(r.Description, strings.ToLower(serviceTypes[ACH])):
-		r.Type = serviceTypes[ACH]
-	case strings.Contains(r.Description, strings.ToLower(serviceTypes[Tranference])):
-		r.Type = serviceTypes[ACH]
-	case strings.Contains(r.Description, strings.ToLower(serviceTypes[Yappy])):
+
+	} else if strings.Contains(r.Description, serviceTypes[Yappy]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
+		!strings.Contains(r.Description, serviceTypes[ACH]) ||
+		!strings.Contains(r.Description, serviceTypes[Tranference])) {
 		r.Type = serviceTypes[Yappy]
-	default:
+
+	} else if strings.Contains(r.Description, serviceTypes[ACH]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
+		!strings.Contains(r.Description, serviceTypes[Yappy]) ||
+		!strings.Contains(r.Description, serviceTypes[Tranference])) {
+		r.Type = serviceTypes[ACH]
+
+	} else if strings.Contains(r.Description, serviceTypes[Tranference]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
+		!strings.Contains(r.Description, serviceTypes[Yappy]) ||
+		!strings.Contains(r.Description, serviceTypes[ACH])) {
+		r.Type = serviceTypes[ACH]
+	} else {
 		r.Type = serviceTypes[NA]
 	}
+
 }
 
 func (r *RawEntry) IncomeDescription() {
 	input := r.Description
+
 	// Check if the input contains "DE" followed by the desired text
-	if strings.Contains(r.Description, "TRANSFERENCIA DE ") {
-		index := strings.Index(r.Description, " DE ")
+	if strings.Contains(r.Description, "transferencia de ") {
+		index := strings.Index(r.Description, " de ")
 		text := input[index+4:]
 		r.Description = text
-	}
 
-	// Check if the r.Description starts with "ACH - "
-	if strings.HasPrefix(r.Description, "ACH - ") {
+	} else if strings.HasPrefix(r.Description, "ach - ") {
+		// Check if the r.Description starts with "ACH - "
 		text := input[6:]
 		r.Description = text
-	}
 
-	// Check if the r.Description starts with "YAPPY DE " and contains " POR "
-	if strings.HasPrefix(r.Description, "YAPPY DE ") && strings.Contains(r.Description, " POR ") {
-		index := strings.Index(r.Description, " POR ")
+	} else if strings.Contains(r.Description, "yappy de ") && strings.Contains(r.Description, " por ") {
+		// Check if the r.Description starts with "YAPPY DE " and contains " POR "
+		index := strings.Index(r.Description, " por ")
 		text := input[9:index]
 		r.Description = text
+
+	} else if strings.Contains(r.Description, "yappy de ") {
+		// Check if the r.Description starts with "YAPPY DE "
+		text := input[9:]
+		r.Description = text
+
+	} else {
+		r.Description = input
 	}
 
 }

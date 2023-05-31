@@ -2,8 +2,8 @@ package caller
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
+	"os"
 
 	services "github.com/elianaarjona/stunning-pancake/services"
 	source "github.com/elianaarjona/stunning-pancake/source"
@@ -47,7 +47,13 @@ func (c *BankConfig) ReportBG() (*source.BgEntries, error) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(jsonData))
+	// fmt.Println(string(jsonData))
+
+	// Create or open the output file
+	file, _ := os.Create("output.json")
+	defer file.Close()
+	// Write the JSON data to the file
+	_, _ = file.Write(jsonData)
 
 	return entries, nil
 

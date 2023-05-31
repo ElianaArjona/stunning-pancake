@@ -78,25 +78,21 @@ func ProcessRawToEntry(r *source.RawEntry, fileType string) (*source.Entry, erro
 	e.Expense = r.Expense
 	e.Balance = r.Balance
 
+	r.GetServicesType()
+	e.Type = r.Type
+
 	r.IncomeDescription()
 	e.Description = r.Description
 
-	if fileType == "excel" {
-		// var mc = &source.BgTransactionType{}
-		r.GetServicesType()
-		e.Type = r.Type
-
-		tm, err := utils.BuildTimestamp(r.TransactionDate, source.ExcelEpoch)
-		if err != nil {
-			fmt.Println("Error Time Parse Excel", err)
-			return nil, err
-		}
-
-		e.Day = int64(tm.Day())
-		e.Month = int64(tm.Month())
-		e.Year = int64(tm.Year())
-
+	tm, err := utils.BuildTimestamp(r.TransactionDate, source.ExcelEpoch)
+	if err != nil {
+		fmt.Println("Error Time Parse Excel", err)
+		return nil, err
 	}
+
+	e.Day = int64(tm.Day())
+	e.Month = int64(tm.Month())
+	e.Year = int64(tm.Year())
 
 	return e, nil
 

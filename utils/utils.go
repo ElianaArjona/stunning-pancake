@@ -56,7 +56,6 @@ func ReadTxtFileLines(filePath string) (*bufio.Scanner, *os.File, error) {
 // }
 
 func BuildTimestamp(source string, excelEpoch time.Time) (time.Time, error) {
-	fmt.Println(source)
 
 	// Attempt to parse the source as "1/28/2023" format
 	tm, err := time.Parse("1/2/2006", source)
