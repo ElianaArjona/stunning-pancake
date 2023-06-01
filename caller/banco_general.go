@@ -1,33 +1,26 @@
 package caller
 
 import (
-	"encoding/json"
 	"log"
-	"os"
 
 	services "github.com/elianaarjona/stunning-pancake/services"
 	source "github.com/elianaarjona/stunning-pancake/source"
-	utils "github.com/elianaarjona/stunning-pancake/utils"
 )
 
 type BankConfig struct {
-	BankName string `json:"bank_name,omitempty"`
-	FileType string `json:"file_type,omitempty"`
-	FilePath string `json:"file_path,omitempty"`
+	BankName  string `json:"bank_name,omitempty"`
+	FileType  string `json:"file_type,omitempty"`
+	FilePath  string `json:"file_path,omitempty"`
+	SheetName string `json:"sheet_name,omitempty"`
 }
 
-func (c *BankConfig) ReportBG() (*source.BgEntries, error) {
+func (c *BankConfig) ReportBG(rows [][]string, ExcelDataStartRow int) (*source.BgEntries, error) {
 
 	var entries = &source.BgEntries{}
 
 	if c.FileType == "excel" {
 
-		rows, err := utils.OpenExcelFile(c.FilePath, source.SheetName)
-		if err != nil {
-			log.Fatal()
-		}
-
-		rawData, err := services.ParseExcelFile(rows)
+		rawData, err := services.ParseExcelFile(rows, ExcelDataStartRow)
 		if err != nil {
 			log.Fatal()
 		}
@@ -42,18 +35,18 @@ func (c *BankConfig) ReportBG() (*source.BgEntries, error) {
 		}
 	}
 
-	jsonData, err := json.MarshalIndent(entries, "", "  ")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// jsonData, err := json.MarshalIndent(entries, "", "  ")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// fmt.Println(string(jsonData))
 
 	// Create or open the output file
-	file, _ := os.Create("output.json")
-	defer file.Close()
-	// Write the JSON data to the file
-	_, _ = file.Write(jsonData)
+	// file, _ := os.Create("output.json")
+	// defer file.Close()
+	// // Write the JSON data to the file
+	// _, _ = file.Write(jsonData)
 
 	return entries, nil
 

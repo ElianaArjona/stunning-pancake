@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	excel "github.com/xuri/excelize/v2"
@@ -93,4 +94,9 @@ func intInSlice(element int64, list []int64) bool {
 		}
 	}
 	return false
+}
+
+func GetAccountName(row []string) string {
+	accountName := strings.Replace(row[1], "Cuenta:", "", -1)
+	return accountName
 }

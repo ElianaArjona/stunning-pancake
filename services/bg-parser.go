@@ -8,18 +8,19 @@ import (
 	utils "github.com/elianaarjona/stunning-pancake/utils"
 )
 
-func ParseExcelFile(rows [][]string) ([]*source.RawEntry, error) {
+func ParseExcelFile(rows [][]string, ExcelDataStartRow int) ([]*source.RawEntry, error) {
 
 	var entries = []*source.RawEntry{}
 
 	for i, row := range rows {
+
 		//Skip unsed excel rows
-		if i >= source.ExcelDataStartRow {
+		if i >= ExcelDataStartRow {
 
 			// Each Row is a new Entry
 			entry := &source.RawEntry{}
 
-			entry.Name = "Banco General"
+			entry.BankName = "Banco General"
 
 			// tm, err := BuildTimestampExcel(row[1])
 			// if err != nil {
@@ -72,7 +73,7 @@ func ProcessRawToEntry(r *source.RawEntry, fileType string) (*source.Entry, erro
 
 	var e = &source.Entry{}
 
-	e.Bank = r.Name
+	e.Bank = r.BankName
 
 	e.Income = r.Income
 	e.Expense = r.Expense

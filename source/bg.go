@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-const (
-	TimeLayout        string = "15/01/2006"
-	TimeLayoutMonth   string = "02-Jan-06"
-	SheetName         string = "BGPExcelReport"
-	ExcelDataStartRow int    = 8
-)
-
 var ExcelEpoch = time.Date(1899, 12, 30, 0, 0, 0, 0, time.UTC)
 
 const (
@@ -31,23 +24,15 @@ var serviceTypes = []string{
 }
 
 type RawEntry struct {
-	Name            string  `json:"name,omitempty"`
+	BankName        string  `json:"bank_name,omitempty"`
 	TransactionDate string  `json:"transaction_date,omitempty"`
 	Reference       int64   `json:"reference,omitempty"`
 	Description     string  `json:"description,omitempty"`
 	Type            string  `json:"type,omitempty"`
-	Expense         float64 `json:"expenses"`
-	Income          float64 `json:"income"`
-	Balance         float64 `json:"balance"`
+	Expense         float64 `json:"expenses,omitempty"`
+	Income          float64 `json:"income,omitempty"`
+	Balance         float64 `json:"balance,omitempty"`
 }
-
-// type BgTransactionType struct {
-// 	// Interest string `json:"interest,omitempty"`
-// 	ACH      bool `json:"ach,omitempty"`
-// 	Yappy    bool `json:"yappy,omitempty"`
-// 	Deposito bool `json:"deposito,omitempty"`
-// 	// Service  []string `json:"service,omitempty"`
-// }
 
 type Entry struct {
 	Bank        string  `json:"bank,omitempty"`

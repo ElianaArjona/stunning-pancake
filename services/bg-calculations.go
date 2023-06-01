@@ -26,8 +26,9 @@ type CountByIncomeType struct {
 	Description string  `json:"description"`
 }
 type ReportIncome struct {
-	Report []CountByIncomeType `json:"report,omitempty"`
-	Total  []CountTotalResult  `json:"totsld,omitempty"`
+	AccountName string              `json:"account_name,omitempty"`
+	Report      []CountByIncomeType `json:"report,omitempty"`
+	Total       []CountTotalResult  `json:"totsld,omitempty"`
 }
 
 func GetTotals(entries *source.BgEntries) []CountTotalResult {
@@ -135,77 +136,6 @@ func GetIncomeTops(entries *source.BgEntries) []CountByIncomeType {
 
 	// report.ExportToCSV("./outputs/sample.csv")
 }
-
-// func createFileTopResult(file *excelize.File, inc *ReportIncome) *excelize.File {
-// 	// Add a new sheet for "Top Result"
-// 	// sheetTopResult := file.NewSheet("Top Result")
-
-// 	// Write the header row
-// 	header := []string{"Year", "Month", "Type", "Description", "Total"}
-// 	for col, value := range header {
-// 		file.SetCellValue("Top Result", fmt.Sprintf("%c1", 'A'+col), value)
-// 	}
-
-// 	// Write the count results to the sheet
-// 	for row, result := range inc.Report {
-// 		file.SetCellValue("Top Result", fmt.Sprintf("A%d", row+2), result.Year)
-// 		file.SetCellValue("Top Result", fmt.Sprintf("B%d", row+2), result.Month)
-// 		file.SetCellValue("Top Result", fmt.Sprintf("C%d", row+2), result.Type)
-// 		file.SetCellValue("Top Result", fmt.Sprintf("D%d", row+2), result.Description)
-// 		file.SetCellValue("Top Result", fmt.Sprintf("E%d", row+2), result.Total)
-// 	}
-
-// 	// Set the column widths
-// 	file.SetColWidth("Top Result Montly", "A", "E", 15)
-
-// 	return file
-// }
-
-// func createFileTotal(file *excelize.File, inc *ReportIncome) *excelize.File {
-// 	// Add a new sheet for "Total"
-
-// 	// Write the header row
-// 	header := []string{"Year", "Month", "Type", "Income", "Expense", "Total"}
-// 	for col, value := range header {
-// 		file.SetCellValue("Total", fmt.Sprintf("%c1", 'A'+col), value)
-// 	}
-
-// 	// Write the count results to the sheet
-// 	for row, result := range inc.Total {
-// 		file.SetCellValue("Total", fmt.Sprintf("A%d", row+2), result.Year)
-// 		file.SetCellValue("Total", fmt.Sprintf("B%d", row+2), result.Month)
-// 		file.SetCellValue("Total", fmt.Sprintf("A%d", row+2), result.Type)
-// 		file.SetCellValue("Total", fmt.Sprintf("B%d", row+2), result.Income)
-// 		file.SetCellValue("Total", fmt.Sprintf("C%d", row+2), result.Expense)
-// 		file.SetCellValue("Total", fmt.Sprintf("D%d", row+2), result.Total)
-// 	}
-
-// 	// Set the column widths
-// 	file.SetColWidth("Total Montly", "A", "D", 15)
-
-// 	return file
-// }
-
-// func (inc *ReportIncome) ExportToExcel(filename string) error {
-// 	// Create a new Excel file
-// 	file := excelize.NewFile()
-
-// 	// Create the "Total" sheet
-// 	file = createFileTotal(file, inc)
-
-// 	// Create the "Top Result" sheet
-// 	file = createFileTopResult(file, inc)
-
-// 	// Save the Excel file
-// 	err := file.SaveAs(filename)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
-// ----------------------------------------
 
 func createFileTotal(writer *csv.Writer, inc *ReportIncome) error {
 	// Write the CSV header
