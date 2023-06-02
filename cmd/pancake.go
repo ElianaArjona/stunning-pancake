@@ -18,17 +18,15 @@ const (
 
 func main() {
 
-	// verufy why icome is not calculate correctetly and verify the other calculation
-
 	// bg := &services.BgEntries{}
 	// bg.ParseTxtFile("./source/bg-sample.txt")
 	// services.ParseExcelFile("source/bg-excel-sample.xlsx")
 
 	var bg = &caller.BankConfig{
-		BankName: "Banco General",
-		FilePath: "samples/sample-new.xlsx",
-		FileType: "excel",
-		SheetName: "BGPExcelReport"
+		BankName:  "Banco General",
+		FilePath:  "samples/sample-new.xlsx",
+		FileType:  "excel",
+		SheetName: "BGPExcelReport",
 	}
 
 	rows, err := utils.OpenExcelFile(bg.FilePath, bg.SheetName)
@@ -48,7 +46,7 @@ func main() {
 	report.Report = services.GetIncomeTops(reports)
 
 	// report.ExportToExcel("./outputs/sample.xlsx")
-	report.ExportToCSV("./outputs/" + report.AccountName + ".csv")
+	report.ExportToExcel("./outputs/" + report.AccountName + ".xlsx")
 
 	// services.CalculateIncome(bg)
 
