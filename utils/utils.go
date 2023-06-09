@@ -14,7 +14,7 @@ func OpenExcelFile(filepath string, sheetName string) ([][]string, error) {
 
 	f, err := excel.OpenFile(filepath)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err, "could not open file")
 		return nil, err
 	}
 	defer func() {
@@ -27,7 +27,7 @@ func OpenExcelFile(filepath string, sheetName string) ([][]string, error) {
 	// Get all the rows in the selected Sheet.
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err, "get rows errors")
 		return nil, err
 	}
 
@@ -96,7 +96,12 @@ func intInSlice(element int64, list []int64) bool {
 	return false
 }
 
-func GetAccountName(row []string) string {
+func GetAccountNameMov(row []string) string {
 	accountName := strings.Replace(row[1], "Cuenta:", "", -1)
+	return accountName
+}
+
+func GetAccountNameEst(row []string) string {
+	accountName := strings.Replace(row[0], "Cuenta:", "", -1)
 	return accountName
 }

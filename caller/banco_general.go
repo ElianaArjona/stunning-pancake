@@ -1,6 +1,7 @@
 package caller
 
 import (
+	"fmt"
 	"log"
 
 	services "github.com/elianaarjona/stunning-pancake/services"
@@ -10,29 +11,44 @@ import (
 type BankConfig struct {
 	BankName  string `json:"bank_name,omitempty"`
 	FileType  string `json:"file_type,omitempty"`
-	FilePath  string `json:"file_path,omitempty"`
+	FilesPath string `json:"file_path,omitempty"`
 	SheetName string `json:"sheet_name,omitempty"`
 }
 
-func (c *BankConfig) ReportBG(rows [][]string, ExcelDataStartRow int) (*source.BgEntries, error) {
+func (c *BankConfig) ReportBG(rows [][]string, ExcelDataStartRow int, fileType string) (*source.BgEntries, error) {
 
 	var entries = &source.BgEntries{}
+	var rawData []*source.RawEntry
+	var err error
 
 	if c.FileType == "excel" {
+		switch fileType {
+		case "Movimiento":
+			rawData, err = services.ParseExceMovimientos(rows, ExcelDataStartRow)
+			if err != nil {
+				fmt.Println(err)
+				log.Fatal()
+			}
+		case "EstadoCuenta":
+			rawData, err = services.ParseExcelEstadosCuenta(rows, ExcelDataStartRow)
+			if err != nil {
+				fmt.Println(err)
+				log.Fatal()
+			}
+		default:
+			rawData = nil // or any other appropriate default value
+			fmt.Println("Unknown file type")
+			return nil, err
+		}
+	}
 
-		rawData, err := services.ParseExcelFile(rows, ExcelDataStartRow)
+	for _, raw := range rawData {
+		entry, err := services.ProcessRawToEntry(raw, c.FileType)
 		if err != nil {
 			log.Fatal()
 		}
 
-		for _, raw := range rawData {
-			entry, err := services.ProcessRawToEntry(raw, c.FileType)
-			if err != nil {
-				log.Fatal()
-			}
-
-			entries.Entries = append(entries.Entries, entry)
-		}
+		entries.Entries = append(entries.Entries, entry)
 	}
 
 	// jsonData, err := json.MarshalIndent(entries, "", "  ")
