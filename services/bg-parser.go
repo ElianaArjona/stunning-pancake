@@ -86,6 +86,7 @@ func ParseExcelEstadosCuenta(rows [][]string, ExcelDataStartRow int) ([]*source.
 			entry.BankName = "Banco General"
 
 			if row[A] != "" {
+
 				entry.TransactionDate = row[A]
 			} else {
 				entry.TransactionDate = row[B]

@@ -73,8 +73,8 @@ func main() {
 
 			report := services.ReportIncome{}
 
-			file := fmt.Sprintf("%s/%s", bg.FilesPath, file.Name())
-			typeFile := getFileType(file)
+			fileDir := fmt.Sprintf("%s/%s", bg.FilesPath, file.Name())
+			typeFile := getFileType(fileDir)
 
 			if typeFile.String() == "Movimiento" {
 				bg.SheetName = SheetNameMov
@@ -82,11 +82,11 @@ func main() {
 				bg.SheetName = SheetNameEst
 			}
 
-			fmt.Println("Procesing File ", file)
+			fmt.Println("Procesing File ", file.Name())
 
-			rows, err := utils.OpenExcelFile(file, bg.SheetName)
+			rows, err := utils.OpenExcelFile(fileDir, bg.SheetName)
 			if err != nil {
-				fmt.Errorf("error opening file ", file)
+				fmt.Errorf("error opening file ", fileDir)
 				log.Fatal()
 			}
 
@@ -98,15 +98,16 @@ func main() {
 
 			reports, err := bg.ReportBG(rows, ExcelDataStartRow, typeFile.String())
 			if err != nil {
-				fmt.Errorf("error procesing file ", file)
+				fmt.Errorf("error procesing file ", file.Name())
 				log.Fatal()
 			}
 
+			fmt.Println("Saving Files")
 			report.Total = services.GetTotals(reports)
 			report.Report = services.GetIncomeTops(reports)
 
 			// report.ExportToExcel("./outputs/sample.xlsx")
-			report.ExportToExcel("./outputs/" + report.AccountName + ".xlsx")
+			report.ExportToExcel("./outputs/" + file.Name())
 
 			// services.CalculateIncome(bg)
 
