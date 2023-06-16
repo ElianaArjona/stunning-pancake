@@ -59,7 +59,7 @@ func main() {
 
 	var bg = &caller.BankConfig{
 		BankName:  "Banco General",
-		FilesPath: "samples",
+		FilesPath: "inputs",
 		FileType:  "excel",
 	}
 
