@@ -1,7 +1,6 @@
 package services
 
 import (
-	"encoding/csv"
 	"fmt"
 	"log"
 	"sort"
@@ -66,11 +65,6 @@ func GetTotals(entries *source.BgEntries) []CountTotalResult {
 		results = append(results, result)
 	}
 
-	// Print the count results
-	// for _, result := range results {
-	// 	fmt.Printf("Year: %d, Month: %d, Type: %s, Income: %.2f, Expense: %.2f, Total: %.2f\n",
-	// 		result.Year, result.Month, result.Type, result.Income, result.Expense, result.Total)
-	// }
 	return results
 }
 
@@ -132,24 +126,13 @@ func GetIncomeTops(entries *source.BgEntries) []CountByIncomeType {
 		return results[i].Description > results[j].Description
 	})
 
-	// Print the count results
-	// for _, result := range results {
-	// 	fmt.Printf("Year: %d, Month: %d, Type: %s, Description: %s, Total: %.2f\n",
-	// 		result.Year, result.Month, result.Type, result.Description, result.Total)
-	// }
-
 	return results
-
-	// report.ExportToCSV("./outputs/sample.csv")
 }
 func createFileCalculationIncome(f *excelize.File, inc *ReportIncome) (*excelize.File, error) {
 
 	index := f.NewSheet("Sheet1")
 	f.SetActiveSheet(index)
 	f.SetSheetName("Sheet1", SheetCal)
-
-	// index := f.NewSheet(SheetCal)
-	// f.SetActiveSheet(index)
 
 	header := []string{"Year", "Month", "Type", "Income", "Expense", "Total"}
 	for i, value := range header {
@@ -172,116 +155,17 @@ func createFileCalculationIncome(f *excelize.File, inc *ReportIncome) (*excelize
 	return f, nil
 }
 
-func _createFileTotal(writer *csv.Writer, inc *ReportIncome) error {
-	// Write the CSV header
-	// header := []string{"Year", "Month", "Type", "Income", "Expense", "Total"}
-	header := []string{"Year", "Month", "Type", "Income", "Expense", "Total"}
-	err := writer.Write(header)
-	if err != nil {
-		return err
-	}
-
-	// Write the count results to the CSV file
-	for _, result := range inc.Total {
-		row := []string{
-			fmt.Sprintf("%d", result.Year),
-			fmt.Sprintf("%d", result.Month),
-			result.Type,
-			fmt.Sprintf("%.2f", result.Income),
-			fmt.Sprintf("%.2f", result.Expense),
-			// result.Description,
-			fmt.Sprintf("%.2f", result.Total),
-		}
-		err = writer.Write(row)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func createFileTopIncomeResult(f *excelize.File, inc *ReportIncome) (*excelize.File, error) {
-
-	index := f.NewSheet(SheetTop)
-	f.SetActiveSheet(index)
-
-	header := []string{"Year", "Month", "Type", "Description", "Total"}
-	for i, value := range header {
-		col := string('A' + i)
-		cell := col + "1"
-		f.SetCellValue(SheetTop, cell, value)
-	}
-
-	row := 2
-	for _, result := range inc.Report {
-		f.SetCellValue(SheetTop, fmt.Sprintf("A%d", row), result.Year)
-		f.SetCellValue(SheetTop, fmt.Sprintf("B%d", row), result.Month)
-		f.SetCellValue(SheetTop, fmt.Sprintf("C%d", row), result.Type)
-		f.SetCellValue(SheetTop, fmt.Sprintf("D%d", row), result.Description)
-		f.SetCellValue(SheetTop, fmt.Sprintf("E%d", row), result.Total)
-		row++
-	}
-
-	return f, nil
-}
-
-func _createFileTopResult(writer *csv.Writer, inc *ReportIncome) error {
-	// Write the CSV header
-	header := []string{"Year", "Month", "Type", "Description", "Total"}
-	err := writer.Write(header)
-	if err != nil {
-		return err
-	}
-
-	// Write the count results to the CSV file
-	for _, result := range inc.Report {
-		row := []string{
-			fmt.Sprintf("%d", result.Year),
-			fmt.Sprintf("%d", result.Month),
-			result.Type,
-			result.Description,
-			fmt.Sprintf("%.2f", result.Total),
-		}
-		err = writer.Write(row)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (inc *ReportIncome) ExportToExcel(filename string) error {
-	// Create the CSV file
-	// file, err := os.Create(filename)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer file.Close()
-
-	// Create a CSV writer
-	// writer := csv.NewWriter(file)
-	// defer writer.Flush()
 
 	f := excelize.NewFile()
 
 	createFileCalculationIncome(f, inc)
-	createFileTopIncomeResult(f, inc)
 
 	err := f.SaveAs(filename)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-
-	// createFileTotal(writer, inc)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// createFileTopResult(writer, inc)
-	// if err != nil {
-	// 	return err
-	// }
 
 	return nil
 }

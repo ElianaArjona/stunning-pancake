@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	services "github.com/elianaarjona/stunning-pancake/services"
+	"github.com/elianaarjona/stunning-pancake/services"
 	source "github.com/elianaarjona/stunning-pancake/source"
 )
 
@@ -25,6 +25,18 @@ func (c *BankConfig) ReportBG(rows [][]string, ExcelDataStartRow int, fileType s
 		switch fileType {
 		case "Movimiento":
 			rawData, err = services.ParseExceMovimientos(rows, ExcelDataStartRow)
+			if err != nil {
+				fmt.Println(err)
+				log.Fatal()
+			}
+		case "Template-1":
+			rawData, err = services.ParseExcelTemplate1(rows, ExcelDataStartRow)
+			if err != nil {
+				fmt.Println(err)
+				log.Fatal()
+			}
+		case "Template-2":
+			rawData, err = services.ParseExcelTemplate2(rows, ExcelDataStartRow)
 			if err != nil {
 				fmt.Println(err)
 				log.Fatal()

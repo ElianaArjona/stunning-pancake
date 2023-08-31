@@ -49,14 +49,6 @@ func ReadTxtFileLines(filePath string) (*bufio.Scanner, *os.File, error) {
 	return fileScanner, readFile, nil
 }
 
-// func BuildTimestamp(source string, timeLayout string) (time.Time, error) {
-// 	tt, err := time.Parse(source, timeLayout)
-// 	if err != nil {
-// 		return time.Time{}, err
-// 	}
-// 	return tt, nil
-// }
-
 func BuildTimestamp(source string, excelEpoch time.Time) (time.Time, error) {
 	// Attempt to parse the source as a formatted date string
 	tm, err := time.Parse("1/2/2006", source)
@@ -85,18 +77,6 @@ func BuildTimestamp(source string, excelEpoch time.Time) (time.Time, error) {
 	return tm, nil
 }
 
-// func BuildTimestamp(source string, excelEpoch time.Time) (time.Time, error) {
-// 	fmt.Println(source)
-// 	in, err := strconv.Atoi(source)
-// 	if err != nil {
-// 		return time.Time{}, err
-// 	}
-
-// 	tm := excelEpoch.Add(time.Duration(in * int(24*time.Hour)))
-
-// 	return tm, nil
-// }
-
 func intInSlice(element int64, list []int64) bool {
 	for _, x := range list {
 		if x == element {
@@ -113,5 +93,10 @@ func GetAccountNameMov(row []string) string {
 
 func GetAccountNameEst(row []string) string {
 	accountName := strings.Replace(row[0], "Cuenta:", "", -1)
+	return accountName
+}
+
+func GetAccountNameTemplate(row []string) string {
+	accountName := row[1]
 	return accountName
 }
