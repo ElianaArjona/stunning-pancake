@@ -11,6 +11,7 @@ const (
 	Deposit = iota
 	ACH
 	Tranference
+	Banca
 	Yappy
 	NA
 )
@@ -19,6 +20,7 @@ var serviceTypes = []string{
 	"deposito",
 	"ach",
 	"transferencia",
+	"banca",
 	"yappy",
 	"NA",
 }
@@ -55,23 +57,24 @@ func (r *RawEntry) GetServicesType() {
 
 	if strings.Contains(r.Description, serviceTypes[Deposit]) && (!strings.Contains(r.Description, serviceTypes[Yappy]) ||
 		!strings.Contains(r.Description, serviceTypes[ACH]) ||
-		!strings.Contains(r.Description, serviceTypes[Tranference])) {
+		!strings.Contains(r.Description, serviceTypes[Tranference])) || !strings.Contains(r.Description, serviceTypes[Banca]) {
 		r.Type = serviceTypes[Deposit]
 
 	} else if strings.Contains(r.Description, serviceTypes[Yappy]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
 		!strings.Contains(r.Description, serviceTypes[ACH]) ||
-		!strings.Contains(r.Description, serviceTypes[Tranference])) {
+		!strings.Contains(r.Description, serviceTypes[Tranference])) || !strings.Contains(r.Description, serviceTypes[Banca]) {
 		r.Type = serviceTypes[Yappy]
 
 	} else if strings.Contains(r.Description, serviceTypes[ACH]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
 		!strings.Contains(r.Description, serviceTypes[Yappy]) ||
-		!strings.Contains(r.Description, serviceTypes[Tranference])) {
+		!strings.Contains(r.Description, serviceTypes[Tranference])) || !strings.Contains(r.Description, serviceTypes[Banca]) {
 		r.Type = serviceTypes[ACH]
 
-	} else if strings.Contains(r.Description, serviceTypes[Tranference]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
+	} else if strings.Contains(r.Description, serviceTypes[Tranference]) || strings.Contains(r.Description, serviceTypes[Banca]) && (!strings.Contains(r.Description, serviceTypes[Deposit]) ||
 		!strings.Contains(r.Description, serviceTypes[Yappy]) ||
 		!strings.Contains(r.Description, serviceTypes[ACH])) {
-		r.Type = serviceTypes[ACH]
+		r.Type = serviceTypes[Tranference]
+
 	} else {
 		r.Type = serviceTypes[NA]
 	}
